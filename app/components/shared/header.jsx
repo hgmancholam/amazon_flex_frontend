@@ -3,9 +3,12 @@
 import { Dropdown, Navbar, Avatar } from "flowbite-react";
 import React from "react";
 import Image from "next/image";
-
+import { useEffect } from "react";
 import Easyflex from "../../assets/images/easyflex.svg";
 export default function HeaderSite() {
+  useEffect(() => {
+    localStorage.setItem("theme", "light");
+  }, []);
   return (
     <Navbar
       fluid
@@ -16,10 +19,8 @@ export default function HeaderSite() {
           src={Easyflex}
           className="mr-3 h-6 sm:h-9"
           alt="Logo"
+          width={100}
         />
-        <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
-          Flowbite React
-        </span>
       </Navbar.Brand>
       <div className="flex md:order-2">
         <Dropdown

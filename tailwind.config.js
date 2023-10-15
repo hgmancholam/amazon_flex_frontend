@@ -8,4 +8,5 @@ module.exports = {
   ],
   theme: {},
   plugins: [require("flowbite/plugin")],
+  darkMode: ["class", '[data-mode="light"]'],
 };
