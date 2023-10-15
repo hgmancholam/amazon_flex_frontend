@@ -1,0 +1,22 @@
+{
+    "products": {
+        "cart": "Add to Cart"
+    },
+    "header": {
+        "home": "Home",
+        "about": "About",
+        "services": "Services",
+        "pricing": "Pricing",
+        "contact": "Contact",
+        "dashabord": "Dashboard",
+        "settings": "Settings",
+        "signout": "Sign Out",
+        "earnings": "Earnings"
+    },
+    "login": {
+        "youremail": "Your email",
+        "password": "Your password",
+        "rememberme": "Remember me ",
+        "login": "Submit"
+    }
+}

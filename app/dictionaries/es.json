@@ -1,0 +1,23 @@
+{
+    "products": {
+        "cart": "Agregar al carrito"
+    },
+    "header": {
+        "home": "Inicio",
+        "about": "Acerca de",
+        "services": "Servicios",
+        "pricing": "Precio",
+        "contact": "Contacto",
+        "dashabord": "Dashboard",
+        "settings": "configuracion",
+        "signout": "Salir",
+        "earnings": "Ganancias"
+    },
+    "login": {
+        "youremail": "Tu correo",
+        "password": "Contraseña",
+        "rememberme": "Recordarme",
+        "login": "Iniciar sesión",
+        "welcome": "Welcome to EasyFlex, please login to continue."
+    }
+}
