@@ -37,7 +37,7 @@ export default function SidebarSite() {
           <Sidebar.Items>
             <Sidebar.ItemGroup>
               <Sidebar.Item
-                href="#"
+                href="/amazon-flex"
                 icon={HiChartPie}
               >
                 <p>Amazon Flex</p>

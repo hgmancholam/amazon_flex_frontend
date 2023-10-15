@@ -7,6 +7,7 @@ export const ContextoAppProvider = ({ children }) => {
   const [dict, setDict] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [logueado, setLogueado] = useState(true);
+  const [afActiveTab, setAfActiveTab] = useState(0);
   const getLocale = () => {
     const l = localStorage.getItem("locale");
     if (!l) {
@@ -40,10 +41,12 @@ export const ContextoAppProvider = ({ children }) => {
     defineIdioma(x);
   }
 
-  const toggleSidebarOpen = () => {
-    console.log("llega");
-    setSidebarOpen((prevSidebarOpen) => !prevSidebarOpen);
-    console.log("termina");
+  const toggleSidebarOpen = (x = -1) => {
+    if (x < 0) {
+      setSidebarOpen((prevSidebarOpen) => !prevSidebarOpen);
+    } else {
+      setSidebarOpen(x > 0 ? true : false);
+    }
   };
 
   return (
@@ -57,6 +60,8 @@ export const ContextoAppProvider = ({ children }) => {
         toggleSidebarOpen,
         logueado,
         setLogueado,
+        afActiveTab,
+        setAfActiveTab,
       }}
     >
       {dict && children}
