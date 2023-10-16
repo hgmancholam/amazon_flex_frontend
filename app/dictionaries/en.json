@@ -17,6 +17,7 @@
         "youremail": "Your email",
         "password": "Your password",
         "rememberme": "Remember me ",
-        "login": "Submit"
+        "login": "Submit",
+        "welcome": "Welcome to BPDFlex, please login to continue."
     }
 }
