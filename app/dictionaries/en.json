@@ -36,7 +36,8 @@
         "savedok": "Selection saved successfully",
         "savedbad": "Something went wrong. Try again.",
         "texttouser": "Select all locations where you want to receive blocks",
-        "save": "Save"
+        "save": "Save",
+        "search": "Search Location"
     },
     "afsettings": {
         "texttouser": "Modify your Amazon Flex configuration",

@@ -99,7 +99,7 @@ export default function SelectLocations() {
         className="w-full"
         type="text"
         onChange={(e) => handleSearchLocation(e.target.value)}
-        placeholder="Buscar ubicacion"
+        placeholder={dict.locations.search}
       />
       <table>
         <tr>

@@ -36,7 +36,8 @@
         "savedok": "Selección guardada exitosamente",
         "savedbad": "Algo salió mal. Inténtelo de nuevo.",
         "texttouser": "Seleccione todas las ubicaciones donde desea recibir bloques",
-        "save": "Guardar"
+        "save": "Guardar",
+        "search": "Buscar Ubicacion"
     },
     "afsettings": {
         "texttouser": "Modifique su configuracion de Amazon Flex",
