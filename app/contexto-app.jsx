@@ -9,17 +9,15 @@ export const ContextoAppProvider = ({ children }) => {
   const [logueado, setLogueado] = useState(true);
   const [afActiveTab, setAfActiveTab] = useState(0);
   const getLocale = () => {
-    const l = localStorage.getItem("locale");
-    if (!l) {
-      localStorage.setItem("locale", "es");
+    if (!locale) {
       setLocale("es");
+      return "es";
+    } else {
+      return locale;
     }
-    const x = localStorage.getItem("locale");
-    return x;
   };
 
   const actualizarLocale = (x) => {
-    localStorage.setItem("locale", x);
     setLocale(x);
     defineIdioma(x);
   };
@@ -33,7 +31,7 @@ export const ContextoAppProvider = ({ children }) => {
     fetchDictionary();
   };
   if (!dict) {
-    const x = localStorage.getItem("locale");
+    const x = locale;
     if (!x) {
       setLocale("es");
       actualizarLocale("es");

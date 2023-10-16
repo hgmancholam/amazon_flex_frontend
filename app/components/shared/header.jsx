@@ -12,7 +12,7 @@ import { BsGrid3X3GapFill, BsList } from "react-icons/bs";
 export default function HeaderSite() {
   const {
     actualizarLocale,
-
+    setLocale,
     dict,
     sidebarOpen,
     toggleSidebarOpen,
@@ -20,8 +20,24 @@ export default function HeaderSite() {
     setLogueado,
   } = useContextoApp();
   const router = useRouter();
+
   useEffect(() => {
-    localStorage.setItem("theme", "light");
+    try {
+      const l = localStorage.getItem("locale");
+      if (!l) {
+        localStorage.setItem("locale", "es");
+        setLocale("es");
+      }
+      const x = localStorage.getItem("locale");
+    } catch (error) {
+      setLocale("es");
+    }
+
+    try {
+      localStorage.setItem("theme", "light");
+    } catch (error) {
+      console.error(error);
+    }
   }, []); // Asegúrate de ejecutar el efecto cuando el locale cambie
 
   const handleSidebarClick = () => {
@@ -29,7 +45,11 @@ export default function HeaderSite() {
   };
 
   const handleClickIdioma = (x) => {
-    localStorage.setItem("locale", x);
+    try {
+      localStorage.setItem("locale", x);
+    } catch (error) {
+      console.error(error);
+    }
     actualizarLocale(x);
   };
   const salir = () => {

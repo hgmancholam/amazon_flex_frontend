@@ -5,19 +5,14 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { useContextoApp } from "../contexto-app";
 import { useRouter } from "next/navigation";
-export default function LoginPage(props) {
-  const { dict, logueado, setLogueado, fActiveTab } = useContextoApp();
+export default function LoginPage() {
+  const { dict, logueado, setLogueado, setAfActiveTab } = useContextoApp();
   const [formData, setFormData] = useState({
     password: "",
     email: "",
     // Agrega más campos según tus necesidades
   });
   const router = useRouter();
-
-  useEffect(() => {
-    localStorage.setItem("theme", "light");
-  }, []); // Asegúrate de ejecutar el efecto cuando el locale cambie
-  let error;
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -28,7 +23,6 @@ export default function LoginPage(props) {
 
     try {
       const response = await simulaAutenticacion();
-
       if (response.ok) {
         console.log("Form submitted successfully!");
         setLogueado(true);
@@ -43,9 +37,6 @@ export default function LoginPage(props) {
     }
   };
 
-  const handleUbicaciones = () => {
-    setAfActiveTab(1);
-  };
   return (
     <main className="flex flex-col  min-h-screen max-h-screen items-center justify-between p-10  md:p-20">
       <form

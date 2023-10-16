@@ -1,10 +1,9 @@
 "use client";
-
 import React from "react";
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useContextoApp } from "../contexto-app";
-import { Button, Tabs } from "flowbite-react";
-import { HiAdjustments, HiClipboardList } from "react-icons/hi";
+import { Tabs } from "flowbite-react";
+import { HiAdjustments } from "react-icons/hi";
 import { FaMapLocation } from "react-icons/fa6";
 import { MdDashboard } from "react-icons/md";
 import SettingsAmazonFlex from "./settings";
@@ -46,7 +45,7 @@ export default function AmazonFlexHome() {
           >
             This is{" "}
             <p className="font-medium text-gray-800 dark:text-white">
-              Dashboard tab's associated content
+              Dashboard tab associated content
             </p>
             <p>
               This dashabord will content all information about your blocks and

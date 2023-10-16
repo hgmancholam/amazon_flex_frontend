@@ -1,31 +1,13 @@
 "use client";
-
-import {
-  Button,
-  Checkbox,
-  FileInput,
-  Label,
-  Radio,
-  RangeSlider,
-  Select,
-  Textarea,
-  TextInput,
-  ToggleSwitch,
-} from "flowbite-react";
+import { Button, Label, TextInput, ToggleSwitch } from "flowbite-react";
 import React from "react";
 import { useState, useEffect } from "react";
 import { useContextoApp } from "../contexto-app";
 import mensaje from "../components/shared/message-ok";
+import { useRouter } from "next/navigation";
 export default function SettingsAmazonFlex(props) {
-  const {
-    dict,
-    logueado,
-    setLogueado,
-    toggleSidebarOpen,
-    setAfActiveTab,
-    afActiveTab,
-  } = useContextoApp();
-  const [formdata, setformdata] = useState({
+  const { dict, toggleSidebarOpen, setAfActiveTab } = useContextoApp();
+  const [formData, setFormData] = useState({
     username: "",
     password: "",
     minblockrate: 50,
@@ -44,7 +26,7 @@ export default function SettingsAmazonFlex(props) {
     refreshtoken: "",
     accesstoken: "",
   });
-
+  const router = useRouter();
   const [swMon, setSwMon] = useState(true);
   const [swTue, setSwTue] = useState(true);
   const [swWed, setSwWed] = useState(true);
@@ -77,7 +59,6 @@ export default function SettingsAmazonFlex(props) {
       if (response.ok) {
         console.log("Form submitted successfully!");
         mensaje("ok", "Configuracion guardada correctamente");
-
         router.push("/");
       } else {
         console.error("Failed to submit form");

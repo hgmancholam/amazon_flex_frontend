@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: bpdanalytics
+    container_name: easyflex
     ports:
       - "3000:3000"
     volumes:

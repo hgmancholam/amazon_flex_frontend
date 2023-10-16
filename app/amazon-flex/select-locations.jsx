@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useContextoApp } from "../contexto-app";
-import { Button, ToggleSwitch, TextInput, Toast } from "flowbite-react";
+import { Button, ToggleSwitch, TextInput } from "flowbite-react";
 import mensaje from "../components/shared/message-ok";
 export default function SelectLocations() {
   const { dict, toggleSidebarOpen, setAfActiveTab } = useContextoApp();
@@ -13,8 +13,8 @@ export default function SelectLocations() {
 
     const fetchLocations = async () => {
       try {
-        const module = await import("./ubicaciones.json");
-        const jsonLocations = module.default;
+        const modulex = await import("./ubicaciones.json");
+        const jsonLocations = modulex.default;
         // console.log(jsonLocations.locations);
         setLocations(jsonLocations.locations);
         setFilteredLocations(jsonLocations.locations);
