@@ -9,16 +9,29 @@ import {
   HiViewBoards,
 } from "react-icons/hi";
 import { BiBuoy } from "react-icons/bi";
+import { FaLanguage } from "react-icons/fa";
+
 import Easyflex from "../../assets/images/easyflex.svg";
 import { useContextoApp } from "../../contexto-app";
 export default function SidebarSite() {
-  const { sidebarOpen, dict, logueado, setLogueado } = useContextoApp();
+  const { sidebarOpen, dict, logueado, setLogueado, actualizarLocale } =
+    useContextoApp();
   const router = useRouter();
   const salir = () => {
     setLogueado(false);
     sessionStorage.removeItem("logueado");
     router.push("/login");
   };
+
+  const handleClickIdioma = (x) => {
+    try {
+      localStorage.setItem("locale", x);
+    } catch (error) {
+      console.error(error);
+    }
+    actualizarLocale(x);
+  };
+
   return (
     <div>
       {logueado && (
@@ -49,19 +62,19 @@ export default function SidebarSite() {
                 href="#"
                 icon={HiViewBoards}
               >
-                <p>Invitaciones</p>
+                <p>{dict.sidebar.invitaciones}</p>
               </Sidebar.Item>
               <Sidebar.Item
                 href="#"
                 icon={HiInbox}
               >
-                <p>Pagos</p>
+                <p>{dict.sidebar.pagos}</p>
               </Sidebar.Item>
               <Sidebar.Item
                 href="#"
                 icon={BiBuoy}
               >
-                <p>Contactenos</p>
+                <p>{dict.sidebar.contactenos}</p>
               </Sidebar.Item>
             </Sidebar.ItemGroup>
             <Sidebar.ItemGroup>
@@ -69,14 +82,27 @@ export default function SidebarSite() {
                 href="#"
                 icon={HiViewBoards}
               >
-                <p>Documentation</p>
+                <p>{dict.sidebar.documentacion}</p>
               </Sidebar.Item>
               <Sidebar.Item
-                href="#"
+                className="cursor-pointer"
+                onClick={() => handleClickIdioma("en")}
+                icon={FaLanguage}
+              >
+                <p>English</p>
+              </Sidebar.Item>
+              <Sidebar.Item
+                className="cursor-pointer"
+                onClick={() => handleClickIdioma("es")}
+                icon={FaLanguage}
+              >
+                <p>Español</p>
+              </Sidebar.Item>
+              <Sidebar.Item
                 icon={HiArrowSmRight}
                 onClick={() => salir()}
               >
-                <p>Salir</p>
+                <p>{dict.sidebar.salir}</p>
               </Sidebar.Item>
             </Sidebar.ItemGroup>
           </Sidebar.Items>

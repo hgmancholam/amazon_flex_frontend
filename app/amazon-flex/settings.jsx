@@ -58,13 +58,14 @@ export default function SettingsAmazonFlex(props) {
 
       if (response.ok) {
         console.log("Form submitted successfully!");
-        mensaje("ok", "Configuracion guardada correctamente");
+        mensaje("ok", dict.afsettings.savedok);
         router.push("/");
       } else {
         console.error("Failed to submit form");
-        mensaje("bad", "Intente nuevamente");
+        mensaje("bad", dict.afsettings.savedbad);
       }
     } catch (error) {
+      mensaje("bad", dict.afsettings.savedbad);
       console.error("Error submitting form:", error);
     }
   };
@@ -78,11 +79,11 @@ export default function SettingsAmazonFlex(props) {
         onSubmit={handleSubmit}
       >
         <div>
-          <h1>Modifique su configuracion de Amazon Flex</h1>
+          <h1>{dict.afsettings.texttouser}</h1>
           <div className="mb-2 block">
             <Label
               htmlFor="email1"
-              value="Correo"
+              value={dict.afsettings.mail}
             />
           </div>
           <TextInput
@@ -97,7 +98,7 @@ export default function SettingsAmazonFlex(props) {
           <div className="mb-2 block">
             <Label
               htmlFor="password1"
-              value="Contraseña"
+              value={dict.afsettings.password}
             />
           </div>
           <TextInput
@@ -111,7 +112,7 @@ export default function SettingsAmazonFlex(props) {
           <div className="mb-2 block">
             <Label
               htmlFor="minblockrate"
-              value="Costo minimo por bloque"
+              value={dict.afsettings.costminbyblock}
             />
           </div>
           <TextInput
@@ -125,7 +126,7 @@ export default function SettingsAmazonFlex(props) {
           <div className="mb-2 block">
             <Label
               htmlFor="minpayrateperhour"
-              value="Costo minimo por Hora"
+              value={dict.afsettings.costminbyhour}
             />
           </div>
           <TextInput
@@ -139,7 +140,7 @@ export default function SettingsAmazonFlex(props) {
           <div className="mb-2 block">
             <Label
               htmlFor="arrivalbuffer"
-              value="Tiempo de antelación"
+              value={dict.afsettings.arrivalbuffer}
             />
           </div>
           <TextInput
@@ -154,24 +155,24 @@ export default function SettingsAmazonFlex(props) {
             type="button"
             onClick={() => handleUbicaciones()}
           >
-            Seleccionar ubicaciones
+            {dict.afsettings.desiredwarehouses}{" "}
           </Button>
         </div>
         <div>
           <div className="mb-2 block">
-            <Label value="Dias laborales" />
+            <Label value={dict.afsettings.desiredweekdays} />
           </div>
           <table>
             <tr>
-              <th>Dia</th>
-              <th>Inicio</th>
-              <th>Fin</th>
+              <th>{dict.afsettings.dia}</th>
+              <th>{dict.afsettings.inicio}</th>
+              <th>{dict.afsettings.fin}</th>
             </tr>
             <tr>
               <td>
                 <ToggleSwitch
                   checked={swMon}
-                  label="Lunes"
+                  label={dict.afsettings.lunes}
                   onChange={setSwMon}
                 />
               </td>
@@ -198,7 +199,7 @@ export default function SettingsAmazonFlex(props) {
               <td>
                 <ToggleSwitch
                   checked={swTue}
-                  label="Martes"
+                  label={dict.afsettings.martes}
                   onChange={setSwTue}
                 />
               </td>
@@ -225,7 +226,7 @@ export default function SettingsAmazonFlex(props) {
               <td>
                 <ToggleSwitch
                   checked={swWed}
-                  label="Miercoles"
+                  label={dict.afsettings.miercoles}
                   onChange={setSwWed}
                 />
               </td>
@@ -252,7 +253,7 @@ export default function SettingsAmazonFlex(props) {
               <td>
                 <ToggleSwitch
                   checked={swThu}
-                  label="Jueves"
+                  label={dict.afsettings.jueves}
                   onChange={setSwThu}
                 />
               </td>
@@ -279,7 +280,7 @@ export default function SettingsAmazonFlex(props) {
               <td>
                 <ToggleSwitch
                   checked={swFri}
-                  label="Viernes"
+                  label={dict.afsettings.viernes}
                   onChange={setSwFri}
                 />
               </td>
@@ -306,7 +307,7 @@ export default function SettingsAmazonFlex(props) {
               <td>
                 <ToggleSwitch
                   checked={swSat}
-                  label="Sabado"
+                  label={dict.afsettings.sabado}
                   onChange={setSwSat}
                 />
               </td>
@@ -333,7 +334,7 @@ export default function SettingsAmazonFlex(props) {
               <td>
                 <ToggleSwitch
                   checked={swSun}
-                  label="Domingo"
+                  label={dict.afsettings.domingo}
                   onChange={setSwSun}
                 />
               </td>
@@ -358,7 +359,7 @@ export default function SettingsAmazonFlex(props) {
             </tr>
           </table>{" "}
         </div>
-        <Button type="submit">Guardar</Button>
+        <Button type="submit">{dict.afsettings.save}</Button>
       </form>
     </main>
   );
@@ -369,7 +370,7 @@ async function simulaAutenticacion(props) {
     setTimeout(() => {
       const respuesta = {
         data: {
-          nombre: "Giovanny Manchola",
+          nombre: "Pancho Villa",
           email: "h@g.com",
           idioma: "Español",
         },

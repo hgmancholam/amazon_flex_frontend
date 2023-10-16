@@ -9,7 +9,7 @@ import { MdDashboard } from "react-icons/md";
 import SettingsAmazonFlex from "./settings";
 import SelectLocations from "./select-locations";
 export default function AmazonFlexHome() {
-  const { afActiveTab, setAfActiveTab } = useContextoApp();
+  const { afActiveTab, setAfActiveTab, dict } = useContextoApp();
   let tabsRef = useRef(null);
   useEffect(() => {
     // console.log("llega");
@@ -28,22 +28,21 @@ export default function AmazonFlexHome() {
         >
           {" "}
           <Tabs.Item
-            title="Settings"
+            title={dict.aftabs.settings}
             icon={HiAdjustments}
           >
             <SettingsAmazonFlex />
           </Tabs.Item>{" "}
           <Tabs.Item
-            title="Ubicaciones"
+            title={dict.aftabs.ubicaciones}
             icon={FaMapLocation}
           >
             <SelectLocations />
           </Tabs.Item>
           <Tabs.Item
-            title="Dashboard"
+            title={dict.aftabs.dashboard}
             icon={MdDashboard}
           >
-            This is{" "}
             <p className="font-medium text-gray-800 dark:text-white">
               Dashboard tab associated content
             </p>

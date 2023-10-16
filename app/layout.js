@@ -26,7 +26,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
+      <body className="p-0 m-0 !max-w-[100%] !overflow-x-hidden">
         <MainLayout>{children}</MainLayout>
       </body>
     </html>

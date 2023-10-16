@@ -66,21 +66,32 @@ export default function SelectLocations() {
 
   const handleSaveLocations = () => {
     // console.log(selectedLocations);
-    mensaje("ok", "Ubicaciones almacenadas correctamente");
+    mensaje("ok", dict.locations.savedok);
     setAfActiveTab(0);
+  };
+  const truncateString = (str) => {
+    const maxLength = 43;
+    // console.log(str.length, maxLength, str);
+    if (str.length <= maxLength) {
+      return str;
+    } else {
+      const r = str.slice(0, maxLength - 3) + "...";
+      return r;
+    }
   };
 
   return (
     <main className="flex flex-col min-h-screen max-h-screen items-center justify-start p-0  md:p-20">
       <span className="font-medium text-gray-800 dark:text-white">
-        Seleccione las ubicaciones en las que quiere recibir bloques
+        {dict.locations.texttouser}
       </span>
+      <br />
       <Button
         className="w-full"
         type="submit"
         onClick={() => handleSaveLocations()}
       >
-        Guardar
+        {dict.locations.save}
       </Button>
 
       <br />
@@ -100,7 +111,7 @@ export default function SelectLocations() {
               <ToggleSwitch
                 className="h-auto"
                 checked={selectedLocations.find((w) => w.value === l.value)}
-                label={l.nombre}
+                label={truncateString(l.nombre)}
                 value={l.value}
                 onChange={() => handleToggleSwitchChange(l.value)}
               />
@@ -108,13 +119,15 @@ export default function SelectLocations() {
           </tr>
         ))}
       </table>
+      <br />
       <Button
-        className="w-full"
+        className="w-full mb-20"
         type="button"
         onClick={() => handleSaveLocations()}
       >
-        Guardar
+        {dict.locations.save}
       </Button>
+      <br />
     </main>
   );
 }

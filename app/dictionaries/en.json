@@ -19,5 +19,46 @@
         "rememberme": "Remember me ",
         "login": "Submit",
         "welcome": "Welcome to BpdFlex, please login to continue."
+    },
+    "sidebar": {
+        "invitaciones": "Invitations",
+        "pagos": "Payments",
+        "contactenos": "Contact",
+        "documentacion": "Documentation",
+        "salir": "Sign Out"
+    },
+    "aftabs": {
+        "settings": "Settings",
+        "ubicaciones": "Locations",
+        "dashboard": "Dashboard"
+    },
+    "locations": {
+        "savedok": "Selection saved successfully",
+        "savedbad": "Something went wrong. Try again.",
+        "texttouser": "Select all locations where you want to receive blocks",
+        "save": "Save"
+    },
+    "afsettings": {
+        "texttouser": "Modify your Amazon Flex configuration",
+        "mail": "Email",
+        "password": "Password",
+        "costminbyblock": "Minimum cost per block",
+        "costminbyhour": "Minimum cost per hour",
+        "arrivalbuffer": "Arrival buffer",
+        "desiredwarehouses": "Desired locations",
+        "desiredweekdays": "Desired days of the week",
+        "dia": "Day",
+        "inicio": "Start",
+        "fin": "End",
+        "lunes": "Monday",
+        "martes": "Tuesday",
+        "miercoles": "Wednesday",
+        "jueves": "Thursday",
+        "viernes": "Friday",
+        "sabado": "Saturday",
+        "domingo": "Sunday",
+        "save": "Save",
+        "savedok": "Settings saved successfully",
+        "savedbad": "Something went wrong. Try again."
     }
 }
