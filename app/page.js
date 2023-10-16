@@ -1,3 +1,3 @@
 export default function Home() {
-  return <div>Welcome to BPDFlex</div>;
+  return <div>Welcome to BpdFlex</div>;
 }
