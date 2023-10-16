@@ -70,7 +70,7 @@ export default function SelectLocations() {
     setAfActiveTab(0);
   };
   const truncateString = (str) => {
-    const maxLength = 43;
+    const maxLength = 40;
     // console.log(str.length, maxLength, str);
     if (str.length <= maxLength) {
       return str;
