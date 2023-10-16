@@ -30,7 +30,7 @@ export default function HeaderSite() {
       }
       const x = localStorage.getItem("locale");
     } catch (error) {
-      setLocale("es");
+      console.error(error);
     }
 
     try {
