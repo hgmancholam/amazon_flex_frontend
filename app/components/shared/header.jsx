@@ -128,7 +128,7 @@ export default function HeaderSite() {
         {logueado && (
           <>
             <Navbar.Link
-              href="#"
+              href="/"
               active
             >
               {dict.header.home}

@@ -18,7 +18,7 @@
         "password": "Your password",
         "rememberme": "Remember me ",
         "login": "Submit",
-        "welcome": "Welcome to BpdFlex, please login to continue."
+        "welcome": "Welcome to BpdFlex, select your bot to continue."
     },
     "sidebar": {
         "invitaciones": "Invitations",
