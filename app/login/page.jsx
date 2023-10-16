@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import { useContextoApp } from "../contexto-app";
 import { useRouter } from "next/navigation";
 export default function LoginPage(props) {
-  const { dict, logueado, setLogueado } = useContextoApp();
+  const { dict, logueado, setLogueado, fActiveTab } = useContextoApp();
   const [formData, setFormData] = useState({
     password: "",
     email: "",
@@ -43,6 +43,9 @@ export default function LoginPage(props) {
     }
   };
 
+  const handleUbicaciones = () => {
+    setAfActiveTab(1);
+  };
   return (
     <main className="flex flex-col  min-h-screen max-h-screen items-center justify-between p-10  md:p-20">
       <form

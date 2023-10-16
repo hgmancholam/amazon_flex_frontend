@@ -37,3 +37,15 @@ body {
 .sidebar.open {
   transform: translateX(0);
 }
+.toast-container {
+  position: fixed;
+  top: 50%; /* Centra verticalmente */
+  left: 50%; /* Centra horizontalmente */
+  transform: translate(-50%, -50%); /* Centra exactamente en el centro */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; /* Centra horizontalmente los elementos dentro del toast */
+  z-index: 9999;
+  /* Otros estilos que desees agregar */
+}
