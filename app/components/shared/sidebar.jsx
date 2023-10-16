@@ -16,6 +16,7 @@ export default function SidebarSite() {
   const router = useRouter();
   const salir = () => {
     setLogueado(false);
+    sessionStorage.removeItem("logueado");
     router.push("/login");
   };
   return (

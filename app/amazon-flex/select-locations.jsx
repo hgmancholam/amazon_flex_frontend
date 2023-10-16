@@ -96,8 +96,9 @@ export default function SelectLocations() {
         </tr>
         {filteredLocations.map((l) => (
           <tr key={l.value}>
-            <td>
+            <td className="h-auto">
               <ToggleSwitch
+                className="h-auto"
                 checked={selectedLocations.find((w) => w.value === l.value)}
                 label={l.nombre}
                 value={l.value}

@@ -52,14 +52,20 @@ export default function HeaderSite() {
   };
   const salir = () => {
     setLogueado(false);
+    sessionStorage.removeItem("logueado");
     router.push("/login");
   };
 
   useEffect(() => {
+    let logX = false;
+    if (sessionStorage.getItem("logueado") === "true" || logueado) {
+      setLogueado(true);
+      logX = true;
+    }
     // Verificar si no estás autenticado y no estás ya en la página de inicio de sesión
-    if (!logueado && router.pathname !== "/login") {
+    if (!logX && router.pathname !== "/login") {
       router.push("/login");
-    } else if (logueado && router.pathname === "/login") {
+    } else if (logX && router.pathname === "/login") {
       router.push("/");
     }
   }, [logueado]);

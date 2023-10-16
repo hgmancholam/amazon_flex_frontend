@@ -26,13 +26,16 @@ export default function LoginPage() {
       if (response.ok) {
         console.log("Form submitted successfully!");
         setLogueado(true);
+        sessionStorage.setItem("logueado", "true");
         router.push("/");
       } else {
         console.error("Failed to submit form");
+        sessionStorage.setItem("logueado", "false");
         setLogueado(false);
       }
     } catch (error) {
       console.error("Error submitting form:", error);
+      sessionStorage.setItem("logueado", "false");
       setLogueado(false);
     }
   };
