@@ -35,9 +35,7 @@ export default function HeaderSite() {
 
     try {
       localStorage.setItem("theme", "light");
-    } catch (error) {
-      console.error(error);
-    }
+    } catch (error) {}
   }, []); // Asegúrate de ejecutar el efecto cuando el locale cambie
 
   const handleSidebarClick = () => {
