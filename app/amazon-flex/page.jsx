@@ -12,7 +12,7 @@ export default function AmazonFlexHome() {
   const { afActiveTab, setAfActiveTab } = useContextoApp();
   let tabsRef = useRef(null);
   useEffect(() => {
-    console.log("llega");
+    // console.log("llega");
     tabsRef.current?.setActiveTab(afActiveTab);
   }, [afActiveTab]);
 

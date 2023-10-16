@@ -339,7 +339,7 @@ export default function SettingsAmazonFlex(props) {
               </td>
               <td>
                 <TextInput
-                  id="monstarttime"
+                  id="sunstarttime"
                   required
                   type="time"
                   onChange={handleChange}

@@ -6,7 +6,7 @@ export const ContextoAppProvider = ({ children }) => {
   const [locale, setLocale] = useState("es");
   const [dict, setDict] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [logueado, setLogueado] = useState(true);
+  const [logueado, setLogueado] = useState(false);
   const [afActiveTab, setAfActiveTab] = useState(0);
   const getLocale = () => {
     if (!locale) {
