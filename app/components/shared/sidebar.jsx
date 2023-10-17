@@ -99,6 +99,7 @@ export default function SidebarSite() {
                 <p>Español</p>
               </Sidebar.Item>
               <Sidebar.Item
+                className="cursor-pointer"
                 icon={HiArrowSmRight}
                 onClick={() => salir()}
               >

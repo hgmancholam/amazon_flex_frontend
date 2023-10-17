@@ -10,6 +10,7 @@ export default function LoginPage() {
   const [formData, setFormData] = useState({
     password: "",
     email: "",
+    remember: "",
     // Agrega más campos según tus necesidades
   });
   const router = useRouter();
@@ -22,8 +23,10 @@ export default function LoginPage() {
     e.preventDefault();
 
     try {
-      const response = await simulaAutenticacion();
+      console.log(formData);
+      const response = await verifyLogin(formData.email, formData.password);
       if (response.ok) {
+        0;
         console.log("Form submitted successfully!");
         setLogueado(true);
         sessionStorage.setItem("logueado", "true");
@@ -50,12 +53,13 @@ export default function LoginPage() {
           <h1>{dict.login.welcomelogin}</h1>
           <div className="mb-2 block">
             <Label
-              htmlFor="email1"
+              htmlFor="email"
               value={dict.login.youremail}
             />
           </div>
           <TextInput
-            id="email1"
+            id="email"
+            name="email"
             placeholder="name@domain.com"
             required
             type="email"
@@ -65,12 +69,13 @@ export default function LoginPage() {
         <div>
           <div className="mb-2 block">
             <Label
-              htmlFor="password1"
+              htmlFor="password"
               value={dict.login.password}
             />
           </div>
           <TextInput
-            id="password1"
+            id="password"
+            name="password"
             required
             type="password"
             onChange={handleChange}
@@ -79,6 +84,7 @@ export default function LoginPage() {
         <div className="flex items-center gap-2">
           <Checkbox
             id="remember"
+            name="remember"
             onChange={handleChange}
           />
           <Label htmlFor="remember">{dict.login.rememberme}</Label>
@@ -103,4 +109,21 @@ async function simulaAutenticacion(props) {
       resolve(respuesta);
     }, 5);
   });
+}
+async function verifyLogin(usuario, password) {
+  const login = {
+    usuario: usuario,
+    password: password,
+  };
+  const loginString = JSON.stringify(login);
+  console.log("cliente ", loginString);
+  const response = await fetch("/api/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json", // Establecer el tipo de contenido
+    },
+    body: loginString,
+  });
+
+  return response.json();
 }
