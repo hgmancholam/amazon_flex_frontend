@@ -14,11 +14,11 @@ import { FaLanguage } from "react-icons/fa";
 import Easyflex from "../../assets/images/easyflex.svg";
 import { useContextoApp } from "../../contexto-app";
 export default function SidebarSite() {
-  const { sidebarOpen, dict, logueado, setLogueado, actualizarLocale } =
+  const { sidebarOpen, dict, logueado, setLoguin, actualizarLocale } =
     useContextoApp();
   const router = useRouter();
   const salir = () => {
-    setLogueado(false);
+    setLoguin(false);
     sessionStorage.removeItem("logueado");
     router.push("/login");
   };

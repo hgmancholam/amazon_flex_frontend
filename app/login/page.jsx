@@ -5,8 +5,9 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { useContextoApp } from "../contexto-app";
 import { useRouter } from "next/navigation";
+import mensaje from "../components/shared/message-ok";
 export default function LoginPage() {
-  const { dict, logueado, setLogueado, setAfActiveTab } = useContextoApp();
+  const { dict, logueado, setLoguin, setUsuario } = useContextoApp();
   const [formData, setFormData] = useState({
     password: "",
     email: "",
@@ -24,22 +25,41 @@ export default function LoginPage() {
 
     try {
       console.log(formData);
-      const response = await verifyLogin(formData.email, formData.password);
-      if (response.ok) {
+      const res = await verifyLogin(formData.email, formData.password);
+      console.log("response", res);
+      if (res.ok) {
         0;
-        console.log("Form submitted successfully!");
-        setLogueado(true);
+        console.log("User logged successfully!");
+        setLoguin(true);
         sessionStorage.setItem("logueado", "true");
+        sessionStorage.setItem("usuario_id", res.data.id);
+        sessionStorage.setItem(
+          "usuario_nombre",
+          res.data.nombre.toUpperCase() + " " + res.data.apellido.toUpperCase()
+        );
+        sessionStorage.setItem("usuario_email", res.data.correo);
+        sessionStorage.setItem("usuario_telefono", res.data.telefono);
+
+        const datauser = {
+          id: res.data.id,
+          nombre:
+            res.data.nombre.toUpperCase() +
+            " " +
+            res.data.apellido.toUpperCase(),
+          correo: res.data.correo,
+          telefono: res.data.telefono,
+        };
+
+        setUsuario(datauser);
         router.push("/");
       } else {
-        console.error("Failed to submit form");
-        sessionStorage.setItem("logueado", "false");
-        setLogueado(false);
+        throw new Error("Credenciales incorrectas");
       }
     } catch (error) {
+      mensaje("bad", "Credenciales incorrectas");
       console.error("Error submitting form:", error);
       sessionStorage.setItem("logueado", "false");
-      setLogueado(false);
+      setLoguin(false);
     }
   };
 

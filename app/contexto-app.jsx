@@ -8,6 +8,7 @@ export const ContextoAppProvider = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [logueado, setLogueado] = useState(false);
   const [afActiveTab, setAfActiveTab] = useState(0);
+  const [usuario, setUsuario] = useState(null);
   const getLocale = () => {
     if (!locale) {
       setLocale("es");
@@ -17,6 +18,17 @@ export const ContextoAppProvider = ({ children }) => {
     }
   };
 
+  const setLoguin = (x) => {
+    setLogueado(x);
+    if (!x) {
+      sessionStorage.setItem("logueado", "false");
+      sessionStorage.removeItem("usuario_id");
+      sessionStorage.removeItem("usuario_nombre");
+      sessionStorage.removeItem("usuario_email");
+      sessionStorage.removeItem("usuario_telefono");
+      setUsuario(null);
+    }
+  };
   const actualizarLocale = (x) => {
     setLocale(x);
     defineIdioma(x);
@@ -57,9 +69,11 @@ export const ContextoAppProvider = ({ children }) => {
         sidebarOpen,
         toggleSidebarOpen,
         logueado,
-        setLogueado,
         afActiveTab,
         setAfActiveTab,
+        usuario,
+        setUsuario,
+        setLoguin,
       }}
     >
       {dict && children}

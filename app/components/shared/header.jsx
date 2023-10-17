@@ -17,7 +17,8 @@ export default function HeaderSite() {
     sidebarOpen,
     toggleSidebarOpen,
     logueado,
-    setLogueado,
+    setLoguin,
+    usuario,
   } = useContextoApp();
   const router = useRouter();
 
@@ -51,15 +52,14 @@ export default function HeaderSite() {
     actualizarLocale(x);
   };
   const salir = () => {
-    setLogueado(false);
-    sessionStorage.removeItem("logueado");
+    setLoguin(false);
     router.push("/login");
   };
 
   useEffect(() => {
     let logX = false;
     if (sessionStorage.getItem("logueado") === "true" || logueado) {
-      setLogueado(true);
+      setLoguin(true);
       logX = true;
     }
     // Verificar si no estás autenticado y no estás ya en la página de inicio de sesión
@@ -109,9 +109,9 @@ export default function HeaderSite() {
             }
           >
             <Dropdown.Header>
-              <span className="block text-sm">Bonnie Green</span>
+              <span className="block text-sm">{usuario.nombre}</span>
               <span className="block truncate text-sm font-medium">
-                name@flowbite.com
+                {usuario.correo}
               </span>
             </Dropdown.Header>
             <Dropdown.Item onClick={() => handleClickIdioma("en")}>
@@ -120,7 +120,9 @@ export default function HeaderSite() {
             <Dropdown.Item onClick={() => handleClickIdioma("es")}>
               Español
             </Dropdown.Item>
-            <Dropdown.Item onClick={() => salir()}>Sign out</Dropdown.Item>
+            <Dropdown.Item onClick={() => salir()}>
+              {dict.sidebar.salir}
+            </Dropdown.Item>
           </Dropdown>
         </div>
       )}

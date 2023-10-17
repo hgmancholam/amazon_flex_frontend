@@ -19,13 +19,14 @@ export async function POST(req) {
     // console.log(res);
     if (!res) {
       // console.log(res);
-      throw new Error("Error adding from base");
+      throw new Error("Error requesting user");
     } else {
       return NextResponse.json({
         status: 200,
         ok: true,
-        success: true,
-        message: "Document added succesfuly",
+        error: false,
+        message: "User logged",
+        data: res,
       });
     }
   } catch (err) {
@@ -33,28 +34,35 @@ export async function POST(req) {
     return NextResponse.json({
       status: 500,
       ok: false,
-      success: false,
+      error: true,
       message: "Se ha presentado un error inesperado",
     });
   }
 }
-
-async function queryUsuario(usuario, password) {
+async function queryUsuario(username, password) {
   try {
-    //con parametros
     const q = query(
       collection(firestore, "usuarios"),
-      where("correo", "==", usuario),
+      where("correo", "==", username),
+      where("contrasena", "==", password),
       limit(1)
     );
     const querySnapshot = await getDocs(q);
+    let usuario = {};
 
-    querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
-      console.log("** ", doc.id, " => ", doc.data());
-    });
-    return "ok";
+    if (querySnapshot.docs.length > 0) {
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        //console.log("** ", doc.id, " => ", doc.data());
+        usuario = doc.data();
+        usuario.id = doc.id;
+      });
+    } else {
+      throw new Error("No se encontro el usuario");
+    }
+    return usuario;
   } catch (error) {
     console.error("Error al obtener datos:", error);
+    throw new Error("Error al obtener datos");
   }
 }
