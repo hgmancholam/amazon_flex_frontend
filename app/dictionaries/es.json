@@ -18,7 +18,8 @@
         "password": "Contraseña",
         "rememberme": "Recordarme",
         "login": "Iniciar sesión",
-        "welcome": "Bienvenido a BpdFlex, Seleccione su bot para continuar."
+        "welcome": "Bienvenido a BpdFlex, Seleccione su bot para continuar.",
+        "welcomelogin": "Bienvenido a BpdFlex"
     },
     "sidebar": {
         "invitaciones": "Invitaciones",
@@ -49,8 +50,8 @@
         "desiredwarehouses": "Ubicaciones deseadas",
         "desiredweekdays": "Dias de la semana",
         "dia": "Día",
-        "inicio": "Inicio",
-        "fin": "Fin",
+        "inicio": "Hora Inicio",
+        "fin": "Hora Fin",
         "lunes": "Lunes",
         "martes": "Martes",
         "miercoles": "Miercoles",

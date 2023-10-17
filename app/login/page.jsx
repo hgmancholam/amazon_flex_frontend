@@ -47,7 +47,7 @@ export default function LoginPage() {
         onSubmit={handleSubmit}
       >
         <div>
-          <h1>{dict.login.welcome}</h1>
+          <h1>{dict.login.welcomelogin}</h1>
           <div className="mb-2 block">
             <Label
               htmlFor="email1"
