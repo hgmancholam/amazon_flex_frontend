@@ -30,26 +30,26 @@ export const ContextoAppProvider = ({ children }) => {
     }
   };
   const actualizarLocale = (x) => {
-    setLocale(x);
-    defineIdioma(x);
+    if (!locale || locale !== x) {
+      setLocale(x);
+      defineIdioma(x);
+    }
+    if (usuario && usuario.idioma && usuario.id) {
+      if (x !== usuario.idioma) {
+        usuario.idioma = x;
+        actualizaPreferenciaIdioma(usuario.id, x);
+      }
+    }
   };
 
-  const defineIdioma = (x = "es") => {
+  const defineIdioma = async (x = "es") => {
     const fetchDictionary = async () => {
       const dictionary = await getDictionary(x);
       setDict(dictionary);
     };
 
-    fetchDictionary();
+    await fetchDictionary();
   };
-  if (!dict) {
-    const x = locale;
-    if (!x) {
-      setLocale("es");
-      actualizarLocale("es");
-    }
-    defineIdioma(x);
-  }
 
   const toggleSidebarOpen = (x = -1) => {
     if (x < 0) {
@@ -59,6 +59,36 @@ export const ContextoAppProvider = ({ children }) => {
     }
   };
 
+  async function actualizaPreferenciaIdioma(idusuario, idioma) {
+    const param = {
+      idusuario: idusuario,
+      idioma: idioma,
+    };
+    const paramString = JSON.stringify(param);
+
+    const response = await fetch("/api/setlanguage", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json", // Establecer el tipo de contenido
+      },
+      body: paramString,
+    });
+  }
+
+  if (usuario && usuario.idioma && locale) {
+    if (locale !== usuario.idioma) {
+      defineIdioma(usuario.idioma);
+    } else {
+      if (!dict) {
+        defineIdioma(usuario.idioma);
+      }
+    }
+  } else {
+    if (!dict) {
+      const x = locale ? locale : "es";
+      defineIdioma(x);
+    }
+  }
   return (
     <ContextoApp.Provider
       value={{

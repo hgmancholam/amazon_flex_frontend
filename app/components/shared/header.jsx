@@ -12,7 +12,7 @@ import { BsGrid3X3GapFill, BsList } from "react-icons/bs";
 export default function HeaderSite() {
   const {
     actualizarLocale,
-    setLocale,
+
     dict,
     sidebarOpen,
     toggleSidebarOpen,
@@ -27,7 +27,7 @@ export default function HeaderSite() {
       const l = localStorage.getItem("locale");
       if (!l) {
         localStorage.setItem("locale", "es");
-        setLocale("es");
+        actualizarLocale("es");
       }
       const x = localStorage.getItem("locale");
     } catch (error) {
@@ -58,12 +58,16 @@ export default function HeaderSite() {
 
   useEffect(() => {
     let logX = false;
-    if (sessionStorage.getItem("logueado") === "true" || logueado) {
+    if (
+      sessionStorage.getItem("logueado") === "true" &&
+      logueado &&
+      usuario.id
+    ) {
       setLoguin(true);
       logX = true;
     }
     // Verificar si no estás autenticado y no estás ya en la página de inicio de sesión
-    if (!logX && router.pathname !== "/login") {
+    if ((!logX && router.pathname !== "/login") || !usuario.id) {
       router.push("/login");
     } else if (logX && router.pathname === "/login") {
       router.push("/");
@@ -109,9 +113,11 @@ export default function HeaderSite() {
             }
           >
             <Dropdown.Header>
-              <span className="block text-sm">{usuario.nombre}</span>
+              <span className="block text-sm">
+                {usuario ? usuario.nombre : "Xxxxx"}
+              </span>
               <span className="block truncate text-sm font-medium">
-                {usuario.correo}
+                {usuario ? usuario.correo : "xxx@wwww.ww"}
               </span>
             </Dropdown.Header>
             <Dropdown.Item onClick={() => handleClickIdioma("en")}>

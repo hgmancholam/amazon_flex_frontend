@@ -4,14 +4,20 @@ import {
   query,
   where,
   getDocs,
+  setDoc,
+  Timestamp,
   collection,
+  doc,
+  updateDoc,
+  addDoc,
   limit,
   QuerySnapshot,
   DocumentData,
 } from "firebase/firestore";
 import { firestore } from "../../../lib/firebase.jsx";
-
+import axios from "axios";
 export async function POST(req) {
+  const clientIp = await getClientIp();
   try {
     const { usuario, password } = await req.json();
 
@@ -21,6 +27,7 @@ export async function POST(req) {
       // console.log(res);
       throw new Error("Error requesting user");
     } else {
+      setLastLogin(res.id, clientIp);
       return NextResponse.json({
         status: 200,
         ok: true,
@@ -39,6 +46,12 @@ export async function POST(req) {
     });
   }
 }
+const getClientIp = async () => {
+  const res = await axios.get("https://api.ipify.org/?format=json");
+  // console.log(res.data);
+  return res.data.ip;
+};
+
 async function queryUsuario(username, password) {
   try {
     const q = query(
@@ -64,5 +77,32 @@ async function queryUsuario(username, password) {
   } catch (error) {
     console.error("Error al obtener datos:", error);
     throw new Error("Error al obtener datos");
+  }
+}
+
+async function setLastLogin(idUsuario, clientIp) {
+  try {
+    //const newCityRef = doc(collection(db, "cities"));
+    // Referencia a la colección de usuarios
+    const lastloginRef = collection(
+      firestore,
+      "usuarios",
+      idUsuario,
+      "lastlogin"
+    );
+    const dataLastlogin = {
+      fecha: await Timestamp.now(),
+      ip: clientIp,
+      // Otros datos que quieras agregar
+    };
+    // console.log(dataLastlogin);
+    // Agregar el documento a la colección "lastlogin" asociada al usuario
+    const docRef = await addDoc(lastloginRef, dataLastlogin);
+
+    // console.log("Documento agregado con ID:", docRef.id);
+    return true;
+  } catch (error) {
+    console.error("Error al agregar el documento:", error);
+    return false;
   }
 }

@@ -7,7 +7,7 @@ import { useContextoApp } from "../contexto-app";
 import { useRouter } from "next/navigation";
 import mensaje from "../components/shared/message-ok";
 export default function LoginPage() {
-  const { dict, logueado, setLoguin, setUsuario } = useContextoApp();
+  const { dict, actualizarLocale, setLoguin, setUsuario } = useContextoApp();
   const [formData, setFormData] = useState({
     password: "",
     email: "",
@@ -24,12 +24,12 @@ export default function LoginPage() {
     e.preventDefault();
 
     try {
-      console.log(formData);
+      // console.log(formData);
       const res = await verifyLogin(formData.email, formData.password);
-      console.log("response", res);
+      // console.log("response", res);
       if (res.ok) {
         0;
-        console.log("User logged successfully!");
+        // console.log("User logged successfully!");
         setLoguin(true);
         sessionStorage.setItem("logueado", "true");
         sessionStorage.setItem("usuario_id", res.data.id);
@@ -39,6 +39,14 @@ export default function LoginPage() {
         );
         sessionStorage.setItem("usuario_email", res.data.correo);
         sessionStorage.setItem("usuario_telefono", res.data.telefono);
+        const idiomaPreferido = res.data.idioma;
+        if (idiomaPreferido) {
+          const tmp = localStorage.getItem("locale");
+          if (!tmp || tmp !== idiomaPreferido) {
+            localStorage.setItem("locale", idiomaPreferido);
+            actualizarLocale(idiomaPreferido);
+          }
+        }
 
         const nombreCompleto = (
           res.data.nombre.toUpperCase() +
@@ -51,6 +59,7 @@ export default function LoginPage() {
           nombre: nombreCompleto,
           correo: res.data.correo,
           telefono: res.data.telefono,
+          idioma: res.data.idioma,
         };
 
         setUsuario(datauser);
@@ -124,7 +133,7 @@ async function verifyLogin(usuario, password) {
     password: password,
   };
   const loginString = JSON.stringify(login);
-  console.log("cliente ", loginString);
+  // console.log("cliente ", loginString);
   const response = await fetch("/api/login", {
     method: "POST",
     headers: {
