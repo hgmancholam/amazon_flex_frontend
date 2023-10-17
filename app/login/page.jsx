@@ -40,12 +40,15 @@ export default function LoginPage() {
         sessionStorage.setItem("usuario_email", res.data.correo);
         sessionStorage.setItem("usuario_telefono", res.data.telefono);
 
+        const nombreCompleto = (
+          res.data.nombre.toUpperCase() +
+          " " +
+          res.data.apellido.toUpperCase() +
+          ""
+        ).trim();
         const datauser = {
           id: res.data.id,
-          nombre:
-            res.data.nombre.toUpperCase() +
-            " " +
-            res.data.apellido.toUpperCase(),
+          nombre: nombreCompleto,
           correo: res.data.correo,
           telefono: res.data.telefono,
         };
@@ -115,21 +118,6 @@ export default function LoginPage() {
   );
 }
 
-async function simulaAutenticacion(props) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const respuesta = {
-        data: {
-          nombre: "Giovanny Manchola",
-          email: "h@g.com",
-          idioma: "Español",
-        },
-        ok: true,
-      };
-      resolve(respuesta);
-    }, 5);
-  });
-}
 async function verifyLogin(usuario, password) {
   const login = {
     usuario: usuario,
