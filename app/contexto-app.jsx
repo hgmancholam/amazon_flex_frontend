@@ -74,6 +74,26 @@ export const ContextoAppProvider = ({ children }) => {
       body: paramString,
     });
   }
+  const flexActivo = () => {
+    try {
+      if (!usuario || !logueado) {
+        return false;
+      } else if (usuario.suscripciones && usuario.suscripciones.length > 0) {
+        const suscripcionFlex = usuario.suscripciones.find(
+          (s) => s.robot == "flex"
+        );
+        if (suscripcionFlex) {
+          return suscripcionFlex.activo || false;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    } catch (error) {
+      return false;
+    }
+  };
 
   if (usuario && usuario.idioma && locale) {
     if (locale !== usuario.idioma) {
@@ -104,6 +124,7 @@ export const ContextoAppProvider = ({ children }) => {
         usuario,
         setUsuario,
         setLoguin,
+        flexActivo,
       }}
     >
       {dict && children}
