@@ -28,6 +28,14 @@ export async function POST(req) {
       throw new Error("Error requesting user");
     } else {
       setLastLogin(res.id, clientIp);
+
+      const suscripciones = await querySubscriptionsbyUserId(res.id);
+      if (suscripciones) {
+        res.suscripciones = suscripciones;
+      } else {
+        res.suscripciones = [];
+      }
+      // console.log(res);
       return NextResponse.json({
         status: 200,
         ok: true,
@@ -77,6 +85,101 @@ async function queryUsuario(username, password) {
   } catch (error) {
     console.error("Error al obtener datos:", error);
     throw new Error("Error al obtener datos");
+  }
+}
+
+async function querySubscriptionsbyUserId(iduser) {
+  try {
+    const suscripcionesRef = collection(
+      firestore,
+      "usuarios",
+      iduser,
+      "suscripciones"
+    );
+    const q = query(suscripcionesRef);
+    const querySnapshot = await getDocs(q);
+    let subs = [];
+
+    if (querySnapshot.docs.length > 0) {
+      for (const doc of querySnapshot.docs) {
+        let sub = doc.data();
+        sub.id = doc.id;
+        sub.idusuario = iduser;
+        const pagos = await queryPagosBySuscriptionId(sub.idusuario, sub.id);
+        sub.pagos = pagos || [];
+        const descuentos = await queryDescuentosBySuscriptionId(
+          sub.idusuario,
+          sub.id
+        );
+        sub.descuentos = descuentos || [];
+        subs.push(sub);
+      }
+    }
+
+    return subs;
+  } catch (error) {
+    console.error("Error al traer suscripciones:", error);
+    return [];
+  }
+}
+
+async function queryPagosBySuscriptionId(iduser, suscriptionId) {
+  try {
+    const pagosRef = collection(
+      firestore,
+      "usuarios",
+      iduser,
+      "suscripciones",
+      suscriptionId,
+      "pagos"
+    );
+    let arrayPagos = [];
+
+    const q = query(pagosRef);
+    const querySnapshot = await getDocs(q);
+    let pagos = [];
+    if (querySnapshot.docs.length > 0) {
+      querySnapshot.forEach((doc) => {
+        let i = doc.data();
+        i.idsuscripcion = suscriptionId;
+        i.isusuario = iduser;
+        arrayPagos.push(i);
+      });
+    }
+    return arrayPagos;
+  } catch (error) {
+    console.error("Error al traer pagos:", error);
+    return [];
+  }
+}
+
+async function queryDescuentosBySuscriptionId(iduser, suscriptionId) {
+  try {
+    const descuentosRef = collection(
+      firestore,
+      "usuarios",
+      iduser,
+      "suscripciones",
+      suscriptionId,
+      "descuentos"
+    );
+    let arrayDescuentos = [];
+
+    const q = query(descuentosRef);
+    const querySnapshot = await getDocs(q);
+    let descuentos = [];
+    if (querySnapshot.docs.length > 0) {
+      querySnapshot.forEach((doc) => {
+        let i = doc.data();
+        i.idsuscripcion = suscriptionId;
+        i.isusuario = iduser;
+        arrayDescuentos.push(i);
+      });
+    }
+    return arrayDescuentos;
+  } catch (error) {
+    console.error("Error al traer descuentos:", error);
+    return [];
   }
 }
 

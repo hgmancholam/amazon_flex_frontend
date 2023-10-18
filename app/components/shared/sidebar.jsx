@@ -14,8 +14,14 @@ import { FaLanguage } from "react-icons/fa";
 import Easyflex from "../../assets/images/easyflex.svg";
 import { useContextoApp } from "../../contexto-app";
 export default function SidebarSite() {
-  const { sidebarOpen, dict, logueado, setLoguin, actualizarLocale } =
-    useContextoApp();
+  const {
+    sidebarOpen,
+    dict,
+    logueado,
+    setLoguin,
+    actualizarLocale,
+    flexActivo,
+  } = useContextoApp();
   const router = useRouter();
   const salir = () => {
     setLoguin(false);
@@ -50,12 +56,14 @@ export default function SidebarSite() {
 
           <Sidebar.Items>
             <Sidebar.ItemGroup>
-              <Sidebar.Item
-                href="/amazon-flex"
-                icon={HiChartPie}
-              >
-                <p>Amazon Flex</p>
-              </Sidebar.Item>{" "}
+              {flexActivo() && (
+                <Sidebar.Item
+                  href="/amazon-flex"
+                  icon={HiChartPie}
+                >
+                  <p>Amazon Flex {flexActivo()}</p>
+                </Sidebar.Item>
+              )}{" "}
             </Sidebar.ItemGroup>
             <Sidebar.ItemGroup>
               <Sidebar.Item

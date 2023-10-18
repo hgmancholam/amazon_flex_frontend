@@ -5,7 +5,7 @@ import FlexLogo from "./assets/images/flex.svg";
 import { useContextoApp } from "./contexto-app";
 
 export default function Home() {
-  const { dict } = useContextoApp();
+  const { dict, flexActivo } = useContextoApp();
 
   return (
     <main className="flex flex-col  min-h-screen max-h-screen items-center justify-start p-3  md:p-20">
@@ -14,8 +14,9 @@ export default function Home() {
       </p>
 
       <Link
-        href="/amazon-flex"
-        className="group rounded-lg border border-gray-300 bg-gray-100 px-5 py-5 transition-colors hover:border-gray-500 hover:bg-gray-200 flex flex-col items-center text-center"
+        href={flexActivo() ? "/amazon-flex" : "#"}
+        className={`group rounded-lg border border-gray-300 bg-gray-100 px-5 py-5 transition-colors hover:border-gray-500 hover:bg-gray-200 flex flex-col items-center text-center  
+        ${flexActivo() ? "" : "inactivo"}`}
       >
         <Image
           className="mx-auto my-auto"

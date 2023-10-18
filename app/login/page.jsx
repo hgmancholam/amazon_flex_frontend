@@ -60,6 +60,7 @@ export default function LoginPage() {
           correo: res.data.correo,
           telefono: res.data.telefono,
           idioma: res.data.idioma,
+          suscripciones: res.data.suscripciones,
         };
 
         setUsuario(datauser);
