@@ -1,4 +1,5 @@
 {
+    "locale": "en",
     "products": {
         "cart": "Add to Cart"
     },
@@ -61,6 +62,14 @@
         "domingo": "Sunday",
         "save": "Save",
         "savedok": "Settings saved successfully",
-        "savedbad": "Something went wrong. Try again."
+        "savedbad": "Something went wrong. Try again.",
+        "startstop": "Turn your bot on or off:",
+        "boton": "Your bot is ON",
+        "botoff": "Your bot is OFF",
+        "botmode": "Select the mode of operation: ",
+        "actually": "Actually",
+        "modoMoney": "Money",
+        "modoNeutral": "Neutral",
+        "modoPasivo": "Passive"
     }
 }

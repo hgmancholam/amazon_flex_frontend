@@ -5,64 +5,112 @@ import { useState, useEffect } from "react";
 import { useContextoApp } from "../contexto-app";
 import mensaje from "../components/shared/message-ok";
 import { useRouter } from "next/navigation";
-export default function SettingsAmazonFlex(props) {
-  const { dict, toggleSidebarOpen, setAfActiveTab } = useContextoApp();
-  const [formData, setFormData] = useState({
-    username: "",
-    password: "",
-    minblockrate: 50,
-    minpayrateperhour: 2,
-    arrivalbuffer: 5,
-    desiredwarehouses: [],
-    desiredstarttime: "00:00",
-    desiredendtime: "23:59",
-    desiredweekdays: [],
-    retrylimit: 30,
-    refreshinterval: 10,
-    twilioacctsid: "",
-    twilioauthtoken: "",
-    twiliofromnumber: "",
-    twiliotonumber: "",
-    refreshtoken: "",
-    accesstoken: "",
-  });
-  const router = useRouter();
-  const [swMon, setSwMon] = useState(true);
-  const [swTue, setSwTue] = useState(true);
-  const [swWed, setSwWed] = useState(true);
-  const [swThu, setSwThu] = useState(true);
-  const [swFri, setSwFri] = useState(true);
-  const [swSat, setSwSat] = useState(true);
-  const [swSun, setSwSun] = useState(true);
+import SelectorModo from "./selector-modo";
+import { Card } from "flowbite-react";
+import {
+  FcChargeBattery,
+  FcCurrencyExchange,
+  FcNeutralTrading,
+} from "react-icons/fc";
 
+const settingsInitialState = {
+  botstate: "off",
+  botmode: "neutral",
+  username: "",
+  password: "",
+  minblockrate: 50,
+  minpayrateperhour: 2,
+  arrivalbuffer: 5,
+  desiredwarehouses: [],
+  desiredweekdays: {
+    mon: { state: true, start: "00:00", end: "23:59" },
+    tue: { state: true, start: "00:00", end: "23:59" },
+    wed: { state: true, start: "00:00", end: "23:59" },
+    thu: { state: true, start: "00:00", end: "23:59" },
+    fri: { state: true, start: "00:00", end: "23:59" },
+    sat: { state: true, start: "00:00", end: "23:59" },
+    sun: { state: true, start: "00:00", end: "23:59" },
+  },
+};
+export default function SettingsAmazonFlex() {
+  const {
+    dict,
+    toggleSidebarOpen,
+    setAfActiveTab,
+    desiredWarehouses,
+    usuario,
+    flexSettings,
+    setFlexSettings,
+  } = useContextoApp();
+
+  settingsInitialState.desiredwarehouses = desiredWarehouses;
+
+  const [formData, setFormData] = useState(
+    flexSettings || settingsInitialState
+  );
+  const router = useRouter();
+  const [robotEncendido, setRobotEncendido] = useState(
+    formData.botstate === "on" || false
+  );
+  const [modoBot, setModoBot] = useState(formData.botmode || "neutral");
+  const [swMon, setSwMon] = useState(formData.desiredweekdays.mon.state);
+  const [swTue, setSwTue] = useState(formData.desiredweekdays.tue.state);
+  const [swWed, setSwWed] = useState(formData.desiredweekdays.wed.state);
+  const [swThu, setSwThu] = useState(formData.desiredweekdays.thu.state);
+  const [swFri, setSwFri] = useState(formData.desiredweekdays.fri.state);
+  const [swSat, setSwSat] = useState(formData.desiredweekdays.sat.state);
+  const [swSun, setSwSun] = useState(formData.desiredweekdays.sun.state);
+  // console.log(formData);
   useEffect(() => {
     toggleSidebarOpen(0);
   }, []);
+
+  useEffect(() => {
+    setFormData({ ...formData, ["desiredwarehouses"]: desiredWarehouses });
+  }, [desiredWarehouses]);
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleArrayChange = (e) => {
-    const { name, value } = e.target;
+  const handleTimeChange = (day, field, value) => {
     setFormData({
       ...formData,
-      [name]: value.split(",").map((item) => item.trim()),
+      desiredweekdays: {
+        ...formData.desiredweekdays,
+        [day]: {
+          ...formData.desiredweekdays[day],
+          [field]: value,
+        },
+      },
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
-    try {
-      const response = await simulaAutenticacion();
 
-      if (response.ok) {
-        console.log("Form submitted successfully!");
-        mensaje("ok", dict.afsettings.savedok);
-        router.push("/");
+    try {
+      const dataToSend = formData;
+      setFlexSettings(dataToSend);
+      const idusuario = usuario.id;
+      const idsuscripcion = usuario.suscripciones.find(
+        (x) => (x.robot = "flex")
+      ).id;
+
+      if (idusuario && idsuscripcion) {
+        dataToSend.idusuario = idusuario;
+        dataToSend.idsuscripcion = idsuscripcion;
+        const response = await saveSettings(dataToSend);
+
+        if (response) {
+          // console.log("Form submitted successfully!");
+          mensaje("ok", dict.afsettings.savedok);
+          router.push("/");
+        } else {
+          console.error("Failed to submit form");
+          mensaje("bad", dict.afsettings.savedbad);
+        }
       } else {
-        console.error("Failed to submit form");
-        mensaje("bad", dict.afsettings.savedbad);
+        throw new Error("No hay usaurio o suscripcion");
       }
     } catch (error) {
       mensaje("bad", dict.afsettings.savedbad);
@@ -73,38 +121,94 @@ export default function SettingsAmazonFlex(props) {
     setAfActiveTab(1);
   };
   return (
-    <main className="flex flex-col min-h-screen max-h-screen items-center justify-between p-5  md:p-20">
+    <main className="flex flex-col min-h-screen w-[100%] max-h-screen items-center justify-between p-[5px] md:p-[20px] md:pt-[5px] gap-4">
       <form
         className="flex w-full max-w-md flex-col gap-4 self-center"
         onSubmit={handleSubmit}
       >
+        <Card className="flex flex-col gap-3 self-center w-[100%] max-w-[100%] m-[10px]">
+          <p>{dict.afsettings.startstop}</p>
+          <ToggleSwitch
+            checked={robotEncendido}
+            label={
+              robotEncendido ? dict.afsettings.boton : dict.afsettings.botoff
+            }
+            onChange={(x) => {
+              setRobotEncendido(x);
+              setFormData({ ...formData, ["botstate"]: x ? "on" : "off" });
+            }}
+          />
+        </Card>
+        <Card className="flex flex-col gap-3 self-center w-[100%] max-w-[100%] m-[10px]">
+          <p>
+            {dict.afsettings.botmode +
+              "  (" +
+              dict.afsettings.actually +
+              " " +
+              modoBot +
+              ")"}
+          </p>
+          <div className="flex flex-row justify-between">
+            <SelectorModo
+              imagen={FcCurrencyExchange}
+              nombre={dict.afsettings.modoMoney}
+              activo={modoBot === "money"}
+              onClick={() => {
+                setModoBot("money");
+                setFormData({ ...formData, ["botmode"]: "money" });
+              }}
+            />
+            <SelectorModo
+              imagen={FcNeutralTrading}
+              nombre={dict.afsettings.modoNeutral}
+              activo={modoBot === "neutral"}
+              onClick={() => {
+                setModoBot("neutral");
+                setFormData({ ...formData, ["botmode"]: "neutral" });
+              }}
+            />
+            <SelectorModo
+              imagen={FcChargeBattery}
+              nombre={dict.afsettings.modoPasivo}
+              activo={modoBot === "pasivo"}
+              onClick={() => {
+                setModoBot("pasivo");
+                setFormData({ ...formData, ["botmode"]: "pasivo" });
+              }}
+            />
+          </div>
+        </Card>
         <div>
           <h1>{dict.afsettings.texttouser}</h1>
           <div className="mb-2 block">
             <Label
-              htmlFor="email1"
+              htmlFor="username"
               value={dict.afsettings.mail}
             />
           </div>
           <TextInput
-            id="email1"
+            id="username"
+            name="username"
             placeholder="name@domain.com"
             required
             type="email"
+            value={formData.username}
             onChange={handleChange}
           />
         </div>
         <div>
           <div className="mb-2 block">
             <Label
-              htmlFor="password1"
+              htmlFor="password"
               value={dict.afsettings.password}
             />
           </div>
           <TextInput
-            id="password1"
+            id="password"
+            name="password"
             required
             type="password"
+            value={formData.password}
             onChange={handleChange}
           />
         </div>
@@ -117,8 +221,10 @@ export default function SettingsAmazonFlex(props) {
           </div>
           <TextInput
             id="minblockrate"
+            name="minblockrate"
             required
             type="number"
+            value={formData.minblockrate}
             onChange={handleChange}
           />
         </div>
@@ -131,8 +237,10 @@ export default function SettingsAmazonFlex(props) {
           </div>
           <TextInput
             id="minpayrateperhour"
+            name="minpayrateperhour"
             required
             type="number"
+            value={formData.minpayrateperhour}
             onChange={handleChange}
           />
         </div>
@@ -140,11 +248,13 @@ export default function SettingsAmazonFlex(props) {
           <div className="mb-2 block">
             <Label
               htmlFor="arrivalbuffer"
-              value={dict.afsettings.arrivalbuffer}
+              value={dict.afsettings.arrivalbuffer + " (min)"}
             />
           </div>
           <TextInput
             id="arrivalbuffer"
+            name="arrivalbuffer"
+            value={formData.arrivalbuffer}
             required
             type="number"
             onChange={handleChange}
@@ -173,7 +283,10 @@ export default function SettingsAmazonFlex(props) {
                 <ToggleSwitch
                   checked={swMon}
                   label={dict.afsettings.lunes}
-                  onChange={setSwMon}
+                  onChange={(e) => {
+                    setSwMon(e);
+                    handleTimeChange("mon", "state", e);
+                  }}
                 />
               </td>
               <td>
@@ -181,8 +294,11 @@ export default function SettingsAmazonFlex(props) {
                   id="monstarttime"
                   required
                   type="time"
-                  onChange={handleChange}
                   disabled={!swMon}
+                  value={formData.desiredweekdays.mon.start || "00:00"}
+                  onChange={(e) =>
+                    handleTimeChange("mon", "start", e.target.value)
+                  }
                 />
               </td>
               <td>
@@ -190,8 +306,11 @@ export default function SettingsAmazonFlex(props) {
                   id="monendtime"
                   required
                   type="time"
-                  onChange={handleChange}
                   disabled={!swMon}
+                  value={formData.desiredweekdays.mon.end || "00:00"}
+                  onChange={(e) =>
+                    handleTimeChange("mon", "end", e.target.value)
+                  }
                 />
               </td>
             </tr>
@@ -200,7 +319,10 @@ export default function SettingsAmazonFlex(props) {
                 <ToggleSwitch
                   checked={swTue}
                   label={dict.afsettings.martes}
-                  onChange={setSwTue}
+                  onChange={(e) => {
+                    setSwTue(e);
+                    handleTimeChange("tue", "state", e);
+                  }}
                 />
               </td>
               <td>
@@ -208,8 +330,11 @@ export default function SettingsAmazonFlex(props) {
                   id="tuestarttime"
                   required
                   type="time"
-                  onChange={handleChange}
                   disabled={!swTue}
+                  value={formData.desiredweekdays.tue.start || "00:00"}
+                  onChange={(e) =>
+                    handleTimeChange("tue", "start", e.target.value)
+                  }
                 />
               </td>
               <td>
@@ -217,8 +342,11 @@ export default function SettingsAmazonFlex(props) {
                   id="tueendtime"
                   required
                   type="time"
-                  onChange={handleChange}
                   disabled={!swTue}
+                  value={formData.desiredweekdays.tue.end || "00:00"}
+                  onChange={(e) =>
+                    handleTimeChange("tue", "end", e.target.value)
+                  }
                 />
               </td>
             </tr>
@@ -227,7 +355,10 @@ export default function SettingsAmazonFlex(props) {
                 <ToggleSwitch
                   checked={swWed}
                   label={dict.afsettings.miercoles}
-                  onChange={setSwWed}
+                  onChange={(e) => {
+                    setSwWed(e);
+                    handleTimeChange("wed", "state", e);
+                  }}
                 />
               </td>
               <td>
@@ -235,8 +366,11 @@ export default function SettingsAmazonFlex(props) {
                   id="wedstarttime"
                   required
                   type="time"
-                  onChange={handleChange}
                   disabled={!swWed}
+                  value={formData.desiredweekdays.wed.start || "00:00"}
+                  onChange={(e) =>
+                    handleTimeChange("wed", "start", e.target.value)
+                  }
                 />
               </td>
               <td>
@@ -244,8 +378,11 @@ export default function SettingsAmazonFlex(props) {
                   id="wedendtime"
                   required
                   type="time"
-                  onChange={handleChange}
                   disabled={!swWed}
+                  value={formData.desiredweekdays.wed.end || "00:00"}
+                  onChange={(e) =>
+                    handleTimeChange("wed", "end", e.target.value)
+                  }
                 />
               </td>
             </tr>
@@ -254,7 +391,10 @@ export default function SettingsAmazonFlex(props) {
                 <ToggleSwitch
                   checked={swThu}
                   label={dict.afsettings.jueves}
-                  onChange={setSwThu}
+                  onChange={(e) => {
+                    setSwThu(e);
+                    handleTimeChange("thu", "state", e);
+                  }}
                 />
               </td>
               <td>
@@ -262,8 +402,11 @@ export default function SettingsAmazonFlex(props) {
                   id="thustarttime"
                   required
                   type="time"
-                  onChange={handleChange}
                   disabled={!swThu}
+                  value={formData.desiredweekdays.thu.start || "00:00"}
+                  onChange={(e) =>
+                    handleTimeChange("thu", "start", e.target.value)
+                  }
                 />
               </td>
               <td>
@@ -271,8 +414,11 @@ export default function SettingsAmazonFlex(props) {
                   id="thuendtime"
                   required
                   type="time"
-                  onChange={handleChange}
                   disabled={!swThu}
+                  value={formData.desiredweekdays.thu.end || "00:00"}
+                  onChange={(e) =>
+                    handleTimeChange("thu", "end", e.target.value)
+                  }
                 />
               </td>
             </tr>
@@ -281,7 +427,10 @@ export default function SettingsAmazonFlex(props) {
                 <ToggleSwitch
                   checked={swFri}
                   label={dict.afsettings.viernes}
-                  onChange={setSwFri}
+                  onChange={(e) => {
+                    setSwFri(e);
+                    handleTimeChange("fri", "state", e);
+                  }}
                 />
               </td>
               <td>
@@ -289,8 +438,11 @@ export default function SettingsAmazonFlex(props) {
                   id="fristarttime"
                   required
                   type="time"
-                  onChange={handleChange}
                   disabled={!swFri}
+                  value={formData.desiredweekdays.fri.start || "00:00"}
+                  onChange={(e) =>
+                    handleTimeChange("fri", "start", e.target.value)
+                  }
                 />
               </td>
               <td>
@@ -298,8 +450,11 @@ export default function SettingsAmazonFlex(props) {
                   id="friendtime"
                   required
                   type="time"
-                  onChange={handleChange}
                   disabled={!swFri}
+                  value={formData.desiredweekdays.fri.end || "00:00"}
+                  onChange={(e) =>
+                    handleTimeChange("fri", "end", e.target.value)
+                  }
                 />
               </td>
             </tr>
@@ -308,7 +463,10 @@ export default function SettingsAmazonFlex(props) {
                 <ToggleSwitch
                   checked={swSat}
                   label={dict.afsettings.sabado}
-                  onChange={setSwSat}
+                  onChange={(e) => {
+                    setSwSat(e);
+                    handleTimeChange("sat", "state", e);
+                  }}
                 />
               </td>
               <td>
@@ -316,8 +474,11 @@ export default function SettingsAmazonFlex(props) {
                   id="satstarttime"
                   required
                   type="time"
-                  onChange={handleChange}
                   disabled={!swSat}
+                  value={formData.desiredweekdays.sat.start || "00:00"}
+                  onChange={(e) =>
+                    handleTimeChange("sat", "start", e.target.value)
+                  }
                 />
               </td>
               <td>
@@ -325,8 +486,11 @@ export default function SettingsAmazonFlex(props) {
                   id="satendtime"
                   required
                   type="time"
-                  onChange={handleChange}
                   disabled={!swSat}
+                  value={formData.desiredweekdays.sat.end || "00:00"}
+                  onChange={(e) =>
+                    handleTimeChange("sat", "end", e.target.value)
+                  }
                 />
               </td>
             </tr>
@@ -335,7 +499,10 @@ export default function SettingsAmazonFlex(props) {
                 <ToggleSwitch
                   checked={swSun}
                   label={dict.afsettings.domingo}
-                  onChange={setSwSun}
+                  onChange={(e) => {
+                    setSwSun(e);
+                    handleTimeChange("sun", "state", e);
+                  }}
                 />
               </td>
               <td>
@@ -343,17 +510,23 @@ export default function SettingsAmazonFlex(props) {
                   id="sunstarttime"
                   required
                   type="time"
-                  onChange={handleChange}
                   disabled={!swSun}
+                  value={formData.desiredweekdays.sun.start || "00:00"}
+                  onChange={(e) =>
+                    handleTimeChange("sun", "start", e.target.value)
+                  }
                 />
               </td>
               <td>
                 <TextInput
-                  id="monendtime"
+                  id="sunendtime"
                   required
                   type="time"
-                  onChange={handleChange}
                   disabled={!swSun}
+                  value={formData.desiredweekdays.sun.end || "00:00"}
+                  onChange={(e) =>
+                    handleTimeChange("sun", "end", e.target.value)
+                  }
                 />
               </td>
             </tr>
@@ -365,18 +538,28 @@ export default function SettingsAmazonFlex(props) {
   );
 }
 
-async function simulaAutenticacion(props) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const respuesta = {
-        data: {
-          nombre: "Pancho Villa",
-          email: "h@g.com",
-          idioma: "Español",
-        },
-        ok: true,
-      };
-      resolve(respuesta);
-    }, 5);
-  });
+async function saveSettings(settings) {
+  const paramString = JSON.stringify(settings);
+  // console.log(settings);
+  try {
+    const res = await fetch("/api/save-settings", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json", // Establecer el tipo de contenido
+      },
+      body: paramString,
+    });
+    if (!res) {
+      throw new Error("No hubo respuesta");
+    } else {
+      if (res.ok) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  } catch (err) {
+    console.error("Error al guardar datos:", err);
+    return false;
+  }
 }

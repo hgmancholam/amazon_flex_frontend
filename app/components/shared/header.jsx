@@ -12,28 +12,15 @@ import { BsGrid3X3GapFill, BsList } from "react-icons/bs";
 export default function HeaderSite() {
   const {
     actualizarLocale,
-
     dict,
     sidebarOpen,
     toggleSidebarOpen,
-    logueado,
-    setLoguin,
     usuario,
+    actualizarUsuario,
   } = useContextoApp();
   const router = useRouter();
 
   useEffect(() => {
-    try {
-      const l = localStorage.getItem("locale");
-      if (!l) {
-        localStorage.setItem("locale", "es");
-        actualizarLocale("es");
-      }
-      const x = localStorage.getItem("locale");
-    } catch (error) {
-      console.error(error);
-    }
-
     try {
       localStorage.setItem("theme", "light");
     } catch (error) {}
@@ -44,35 +31,24 @@ export default function HeaderSite() {
   };
 
   const handleClickIdioma = (x) => {
-    try {
-      localStorage.setItem("locale", x);
-    } catch (error) {
-      console.error(error);
-    }
     actualizarLocale(x);
   };
+
   const salir = () => {
-    setLoguin(false);
+    actualizarUsuario(null);
     router.push("/login");
   };
 
   useEffect(() => {
     let logX = false;
-    if (
-      sessionStorage.getItem("logueado") === "true" &&
-      logueado &&
-      usuario.id
-    ) {
-      setLoguin(true);
-      logX = true;
-    }
+    logX = usuario.logueado || false;
     // Verificar si no estás autenticado y no estás ya en la página de inicio de sesión
     if ((!logX && router.pathname !== "/login") || !usuario.id) {
       router.push("/login");
     } else if (logX && router.pathname === "/login") {
       router.push("/");
     }
-  }, [logueado]);
+  }, [usuario]);
 
   return (
     <Navbar
@@ -80,7 +56,7 @@ export default function HeaderSite() {
       rounded
       className="bg-gradient-to-t from-gray-200  to-white"
     >
-      {logueado && (
+      {usuario.logueado && (
         <div className="flex justify-end p-0">
           <button
             className="inline-flex items-center rounded-lg p-1 text-2xl text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 "
@@ -91,7 +67,10 @@ export default function HeaderSite() {
         </div>
       )}
 
-      <Navbar.Brand href="#">
+      <Navbar.Brand
+        onClick={() => router.push("/")}
+        className="cursor-pointer"
+      >
         <Image
           className="mr-3 h-10 md:h-9"
           src={Easyflex}
@@ -99,7 +78,7 @@ export default function HeaderSite() {
           width={200}
         />
       </Navbar.Brand>
-      {logueado && (
+      {usuario.logueado && (
         <div className="flex md:order-2">
           <Dropdown
             arrowIcon={false}
@@ -133,18 +112,39 @@ export default function HeaderSite() {
         </div>
       )}
       <Navbar.Collapse>
-        {logueado && (
+        {usuario.logueado && (
           <>
             <Navbar.Link
-              href="/"
+              onClick={() => router.push("/")}
+              className="cursor-pointer"
               active
             >
               {dict.header.home}
             </Navbar.Link>
-            <Navbar.Link href="#">{dict.header.about}</Navbar.Link>
-            <Navbar.Link href="#">{dict.header.services}</Navbar.Link>
-            <Navbar.Link href="#">{dict.header.pricing}</Navbar.Link>
-            <Navbar.Link href="#">{dict.header.contact}</Navbar.Link>
+            <Navbar.Link
+              onClick={() => router.push("/")}
+              className="cursor-pointer"
+            >
+              {dict.header.about}
+            </Navbar.Link>
+            <Navbar.Link
+              onClick={() => router.push("/")}
+              className="cursor-pointer"
+            >
+              {dict.header.services}
+            </Navbar.Link>
+            <Navbar.Link
+              onClick={() => router.push("/")}
+              className="cursor-pointer"
+            >
+              {dict.header.pricing}
+            </Navbar.Link>
+            <Navbar.Link
+              onClick={() => router.push("/")}
+              className="cursor-pointer"
+            >
+              {dict.header.contact}
+            </Navbar.Link>
           </>
         )}
       </Navbar.Collapse>

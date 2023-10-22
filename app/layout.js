@@ -1,5 +1,4 @@
 import "./globals.css";
-import { Inter } from "next/font/google";
 import MainLayout from "./main-component";
 
 export const metadata = {

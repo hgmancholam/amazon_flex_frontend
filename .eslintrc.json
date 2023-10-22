@@ -20,7 +20,7 @@
     "react/prop-types": "off",
     "react/react-in-jsx-scope": "off",
     "react-hooks/exhaustive-deps": "off",
-    "no-unused-vars": "off",
+    // "no-unused-vars": "off",
     "no-empty-function": "off",
     "no-empty": "off"
   }

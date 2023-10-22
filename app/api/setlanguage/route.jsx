@@ -1,26 +1,12 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-import {
-  query,
-  where,
-  getDocs,
-  setDoc,
-  Timestamp,
-  collection,
-  doc,
-  updateDoc,
-  addDoc,
-  docRef,
-  limit,
-  QuerySnapshot,
-  DocumentData,
-} from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { firestore } from "../../../lib/firebase.jsx";
 
 export async function POST(req) {
   try {
     const { idusuario, idioma } = await req.json();
-    const res = await setLanguagePrefered(idusuario, idioma);
+    await setLanguagePrefered(idusuario, idioma);
     return NextResponse.json({
       status: 200,
       ok: true,
@@ -42,7 +28,7 @@ async function setLanguagePrefered(idusuario, idioma) {
     //const newCityRef = doc(collection(db, "cities"));
     // Referencia a la colección de usuarios
     const userRef = doc(firestore, "usuarios", idusuario);
-    const docRef = await updateDoc(userRef, {
+    await updateDoc(userRef, {
       idioma: idioma,
     });
 

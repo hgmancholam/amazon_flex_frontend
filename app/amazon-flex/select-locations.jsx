@@ -3,10 +3,15 @@ import { useContextoApp } from "../contexto-app";
 import { Button, ToggleSwitch, TextInput } from "flowbite-react";
 import mensaje from "../components/shared/message-ok";
 export default function SelectLocations() {
-  const { dict, toggleSidebarOpen, setAfActiveTab } = useContextoApp();
+  const {
+    dict,
+    toggleSidebarOpen,
+    setAfActiveTab,
+    setDesiredWarehouses,
+    desiredWarehouses,
+  } = useContextoApp();
   const [locations, setLocations] = useState([]);
   const [filteredLocations, setFilteredLocations] = useState([]);
-  const [selectedLocations, setSelectedLocations] = useState([]);
 
   useEffect(() => {
     toggleSidebarOpen(0);
@@ -34,13 +39,13 @@ export default function SelectLocations() {
       (location) => location.value === value
     );
 
-    // Verificar si la ubicación ya está en selectedLocations
-    const isSelected = selectedLocations.some(
+    // Verificar si la ubicación ya está en desiredWarehouses
+    const isSelected = desiredWarehouses.some(
       (location) => location.value === value
     );
 
     // Si ya está seleccionada, quitarla; de lo contrario, agregarla
-    setSelectedLocations((prevSelected) =>
+    setDesiredWarehouses((prevSelected) =>
       isSelected
         ? prevSelected.filter((l) => l.value !== value)
         : [...prevSelected, locationToAdd]
@@ -58,14 +63,14 @@ export default function SelectLocations() {
           .includes(searchText.toLowerCase().trim())
       );
       const combinedLocations = Array.from(
-        new Set([...filtered, ...selectedLocations])
+        new Set([...filtered, ...desiredWarehouses])
       );
       setFilteredLocations(combinedLocations);
     }
   };
 
   const handleSaveLocations = () => {
-    // console.log(selectedLocations);
+    console.log(desiredWarehouses);
     mensaje("ok", dict.locations.savedok);
     setAfActiveTab(0);
   };
@@ -110,7 +115,7 @@ export default function SelectLocations() {
             <td className="h-auto">
               <ToggleSwitch
                 className="h-auto"
-                checked={selectedLocations.find((w) => w.value === l.value)}
+                checked={desiredWarehouses.find((w) => w.value === l.value)}
                 label={truncateString(l.nombre)}
                 value={l.value}
                 onChange={() => handleToggleSwitchChange(l.value)}

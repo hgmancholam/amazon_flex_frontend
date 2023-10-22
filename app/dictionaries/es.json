@@ -1,4 +1,5 @@
 {
+    "locale": "es",
     "products": {
         "cart": "Agregar al carrito"
     },
@@ -61,6 +62,14 @@
         "domingo": "Domingo",
         "save": "Guardar",
         "savedok": "Configuracion guardada exitosamente",
-        "savedbad": "Algo salio mal. Intente de nuevo."
+        "savedbad": "Algo salio mal. Intente de nuevo.",
+        "startstop": "Encienda o apague su robot:",
+        "boton": "Su robot se encuentra ENCENDIDO",
+        "botoff": "Su robot se encuentra APAGADO",
+        "botmode": "Seleccione el modo de funcionamiento: ",
+        "actually": "actualmente",
+        "modoMoney": "Money",
+        "modoNeutral": "Neutral",
+        "modoPasivo": "Pasivo"
     }
 }

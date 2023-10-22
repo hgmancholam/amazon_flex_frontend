@@ -1,54 +1,102 @@
 import React, { createContext, useContext, useState } from "react";
 import { getDictionary } from "../app/dictionaries/dictionaries";
+import dictEs from "./dictionaries/es.json";
+// import { useAppSelector } from "./redux/store";
+
+// import {
+//   login,
+//   logout,
+//   updateDictionary,
+//   initFromSession,
+// } from "./redux/features/auth-slice";
+// import { useDispatch } from "react-redux";
 // Crea el contexto
+
+const userInitialState = {
+  logueado: false,
+  id: null,
+  nombre: null,
+  correo: null,
+  password: null,
+  telefono: null,
+  idioma: "es",
+  isadmin: false,
+};
+
 const ContextoApp = createContext();
+
 export const ContextoAppProvider = ({ children }) => {
-  const [locale, setLocale] = useState("es");
-  const [dict, setDict] = useState(null);
+  // const dispatch = useDispatch();
+  const [dict, setDict] = useState(dictEs);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [logueado, setLogueado] = useState(false);
   const [afActiveTab, setAfActiveTab] = useState(0);
-  const [usuario, setUsuario] = useState(null);
-  const getLocale = () => {
-    if (!locale) {
-      setLocale("es");
-      return "es";
+  const [usuario, setUsuario] = useState(userInitialState);
+  const [desiredWarehouses, setDesiredWarehouses] = useState([]);
+  const [flexSettings, setFlexSettings] = useState(null);
+
+  const defineIdioma = async (x = "es") => {
+    const fetchDictionary = async () => {
+      const dictionary = await getDictionary(x);
+      setDict(dictionary);
+      // dispatch(updateDictionary(dictionary));
+    };
+
+    if (dict !== null && dict.locale == x) {
+      return;
+    }
+
+    var prevDict = null;
+    if (typeof window !== "undefined" && window.sessionStorage) {
+      try {
+        prevDict = JSON.parse(sessionStorage.getItem("locale"));
+      } catch (error) {
+        prevDict = null;
+      }
+    }
+    if (prevDict !== null && prevDict.locale == x) {
+      setDict(prevDict);
+      // dispatch(updateDictionary(prevDict));
     } else {
-      return locale;
+      await fetchDictionary();
     }
   };
 
-  const setLoguin = (x) => {
-    setLogueado(x);
-    if (!x) {
-      sessionStorage.setItem("logueado", "false");
-      sessionStorage.removeItem("usuario_id");
-      sessionStorage.removeItem("usuario_nombre");
-      sessionStorage.removeItem("usuario_email");
-      sessionStorage.removeItem("usuario_telefono");
-      setUsuario(null);
+  const getLocale = () => {
+    if (!usuario || !usuario.idioma) {
+      return "es";
+    } else {
+      return usuario.idioma;
     }
   };
-  const actualizarLocale = (x) => {
-    if (!locale || locale !== x) {
-      setLocale(x);
-      defineIdioma(x);
+
+  const actualizarUsuario = (x) => {
+    // console.log(x);
+    if (x !== null) {
+      setUsuario(x);
+      if (x.suscripciones && x.suscripciones.length > 0) {
+        const suscripcion = x.suscripciones.find((x) => (x.robot = "flex"));
+        if (
+          suscripcion &&
+          suscripcion.settings &&
+          suscripcion.settings.desiredwarehouses
+        ) {
+          setFlexSettings(suscripcion.settings);
+          setDesiredWarehouses(suscripcion.settings.desiredwarehouses);
+        }
+      }
+    } else {
+      setUsuario(userInitialState);
     }
+  };
+
+  const actualizarLocale = (x) => {
+    defineIdioma(x);
     if (usuario && usuario.idioma && usuario.id) {
       if (x !== usuario.idioma) {
         usuario.idioma = x;
         actualizaPreferenciaIdioma(usuario.id, x);
       }
     }
-  };
-
-  const defineIdioma = async (x = "es") => {
-    const fetchDictionary = async () => {
-      const dictionary = await getDictionary(x);
-      setDict(dictionary);
-    };
-
-    await fetchDictionary();
   };
 
   const toggleSidebarOpen = (x = -1) => {
@@ -66,7 +114,7 @@ export const ContextoAppProvider = ({ children }) => {
     };
     const paramString = JSON.stringify(param);
 
-    const response = await fetch("/api/setlanguage", {
+    await fetch("/api/setlanguage", {
       method: "POST",
       headers: {
         "Content-Type": "application/json", // Establecer el tipo de contenido
@@ -76,7 +124,7 @@ export const ContextoAppProvider = ({ children }) => {
   }
   const flexActivo = () => {
     try {
-      if (!usuario || !logueado) {
+      if (!usuario || !usuario.logueado) {
         return false;
       } else if (usuario.suscripciones && usuario.suscripciones.length > 0) {
         const suscripcionFlex = usuario.suscripciones.find(
@@ -95,36 +143,23 @@ export const ContextoAppProvider = ({ children }) => {
     }
   };
 
-  if (usuario && usuario.idioma && locale) {
-    if (locale !== usuario.idioma) {
-      defineIdioma(usuario.idioma);
-    } else {
-      if (!dict) {
-        defineIdioma(usuario.idioma);
-      }
-    }
-  } else {
-    if (!dict) {
-      const x = locale ? locale : "es";
-      defineIdioma(x);
-    }
-  }
   return (
     <ContextoApp.Provider
       value={{
         getLocale,
         actualizarLocale,
-        locale,
         dict,
         sidebarOpen,
         toggleSidebarOpen,
-        logueado,
         afActiveTab,
         setAfActiveTab,
         usuario,
-        setUsuario,
-        setLoguin,
+        actualizarUsuario,
         flexActivo,
+        setDesiredWarehouses,
+        desiredWarehouses,
+        flexSettings,
+        setFlexSettings,
       }}
     >
       {dict && children}

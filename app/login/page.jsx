@@ -2,12 +2,13 @@
 
 import { Button, Checkbox, Label, TextInput } from "flowbite-react";
 import React from "react";
-import { useState, useEffect } from "react";
-import { useContextoApp } from "../contexto-app";
 import { useRouter } from "next/navigation";
+
+import { useState } from "react";
+import { useContextoApp } from "../contexto-app";
 import mensaje from "../components/shared/message-ok";
 export default function LoginPage() {
-  const { dict, actualizarLocale, setLoguin, setUsuario } = useContextoApp();
+  const { dict, actualizarUsuario } = useContextoApp();
   const [formData, setFormData] = useState({
     password: "",
     email: "",
@@ -24,30 +25,9 @@ export default function LoginPage() {
     e.preventDefault();
 
     try {
-      // console.log(formData);
       const res = await verifyLogin(formData.email, formData.password);
-      // console.log("response", res);
-      if (res.ok) {
-        0;
-        // console.log("User logged successfully!");
-        setLoguin(true);
-        sessionStorage.setItem("logueado", "true");
-        sessionStorage.setItem("usuario_id", res.data.id);
-        sessionStorage.setItem(
-          "usuario_nombre",
-          res.data.nombre.toUpperCase() + " " + res.data.apellido.toUpperCase()
-        );
-        sessionStorage.setItem("usuario_email", res.data.correo);
-        sessionStorage.setItem("usuario_telefono", res.data.telefono);
-        const idiomaPreferido = res.data.idioma;
-        if (idiomaPreferido) {
-          const tmp = localStorage.getItem("locale");
-          if (!tmp || tmp !== idiomaPreferido) {
-            localStorage.setItem("locale", idiomaPreferido);
-            actualizarLocale(idiomaPreferido);
-          }
-        }
 
+      if (res.ok) {
         const nombreCompleto = (
           res.data.nombre.toUpperCase() +
           " " +
@@ -55,24 +35,25 @@ export default function LoginPage() {
           ""
         ).trim();
         const datauser = {
+          logueado: true,
           id: res.data.id,
           nombre: nombreCompleto,
           correo: res.data.correo,
+          password: null,
           telefono: res.data.telefono,
           idioma: res.data.idioma,
           suscripciones: res.data.suscripciones,
+          isadmin: false,
         };
-
-        setUsuario(datauser);
+        actualizarUsuario(datauser);
         router.push("/");
       } else {
-        throw new Error("Credenciales incorrectas");
+        throw new Error("Credenciales incorrectas!");
       }
     } catch (error) {
       mensaje("bad", "Credenciales incorrectas");
       console.error("Error submitting form:", error);
-      sessionStorage.setItem("logueado", "false");
-      setLoguin(false);
+      actualizarUsuario(null);
     }
   };
 

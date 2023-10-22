@@ -1,18 +1,13 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 import {
   query,
   where,
   getDocs,
-  setDoc,
   Timestamp,
   collection,
-  doc,
-  updateDoc,
   addDoc,
   limit,
-  QuerySnapshot,
-  DocumentData,
 } from "firebase/firestore";
 import { firestore } from "../../../lib/firebase.jsx";
 import axios from "axios";
@@ -137,7 +132,7 @@ async function queryPagosBySuscriptionId(iduser, suscriptionId) {
 
     const q = query(pagosRef);
     const querySnapshot = await getDocs(q);
-    let pagos = [];
+
     if (querySnapshot.docs.length > 0) {
       querySnapshot.forEach((doc) => {
         let i = doc.data();
@@ -167,7 +162,7 @@ async function queryDescuentosBySuscriptionId(iduser, suscriptionId) {
 
     const q = query(descuentosRef);
     const querySnapshot = await getDocs(q);
-    let descuentos = [];
+
     if (querySnapshot.docs.length > 0) {
       querySnapshot.forEach((doc) => {
         let i = doc.data();
@@ -200,7 +195,7 @@ async function setLastLogin(idUsuario, clientIp) {
     };
     // console.log(dataLastlogin);
     // Agregar el documento a la colección "lastlogin" asociada al usuario
-    const docRef = await addDoc(lastloginRef, dataLastlogin);
+    await addDoc(lastloginRef, dataLastlogin);
 
     // console.log("Documento agregado con ID:", docRef.id);
     return true;
