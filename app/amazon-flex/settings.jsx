@@ -14,7 +14,7 @@ import {
 } from "react-icons/fc";
 
 const settingsInitialState = {
-  botstate: "off",
+  botstate: false,
   botmode: "neutral",
   username: "",
   password: "",
@@ -50,7 +50,7 @@ export default function SettingsAmazonFlex() {
   );
   const router = useRouter();
   const [robotEncendido, setRobotEncendido] = useState(
-    formData.botstate === "on" || false
+    formData.botstate || false
   );
   const [modoBot, setModoBot] = useState(formData.botmode || "neutral");
   const [swMon, setSwMon] = useState(formData.desiredweekdays.mon.state);
@@ -135,7 +135,7 @@ export default function SettingsAmazonFlex() {
             }
             onChange={(x) => {
               setRobotEncendido(x);
-              setFormData({ ...formData, ["botstate"]: x ? "on" : "off" });
+              setFormData({ ...formData, ["botstate"]: x ? true : false });
             }}
           />
         </Card>
