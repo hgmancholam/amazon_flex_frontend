@@ -3,7 +3,6 @@ import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCXuW4db5K6cclkhvtXCT3SvVTRypMmnHQ",
-
   authDomain: "easyflex-402204.firebaseapp.com",
   databaseURL: "https://easyflex-402204-default-rtdb.firebaseio.com",
   projectId: "easyflex-402204",

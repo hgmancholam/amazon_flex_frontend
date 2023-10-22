@@ -13,7 +13,7 @@ export default function SelectorModo(props) {
     >
       <Icono className="text-4xl md:text-[calc(3vw)]" />
       <span
-        className={`self-center text-center mb-3 text-[15px] md:text-[calc(2vw)] font-normal`}
+        className={`self-center text-center mb-3 text-[15px] md:text-[calc(2vw)] max-text-[30px] font-normal`}
       >
         {nombre}
       </span>
